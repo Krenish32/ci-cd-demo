@@ -22,3 +22,14 @@ jobs:
 
       - name: Run tests
         run: npm test
+      - name: Send dynamic data to Google Sheet
+        run: |
+          start=$(date +%s)
+          npm install
+          npm test
+          end=$(date +%s)
+          total=$((end - start))
+
+          curl -X POST -H "Content-Type: application/json" \
+          -d "{\"tool\":\"GitHub Actions\",\"run\":1,\"buildTime\":$total,\"testTime\":$total,\"status\":\"Success\"}" \
+          "https://script.google.com/macros/s/AKfycbwiNT8EKchcFIWro3qX_WEjHpeTvIe3o1PMEJcafIZZA50jYZZryi8g8gikvyTTbhN26Q/exec"
