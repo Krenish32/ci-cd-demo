@@ -11,7 +11,6 @@ build_and_post:
     - end=$(date +%s)
     - build_time=$((end - start))
 
-    # Metadata from GitLab env vars
     - node_ver=$(node -v || echo "n/a")
     - npm_ver=$(npm -v || echo "n/a")
     - short_sha=$(printf "%s" "$CI_COMMIT_SHA" | cut -c1-8)
@@ -22,5 +21,5 @@ build_and_post:
 
     - >
       curl -s -X POST -H "Content-Type: application/json"
-      -d "{\"tool\":\"GitLab CI/CD\",\"buildTime\":${build_time},\"testTime\":${build_time},\"status\":\"Success\",\"commit\":\"${short_sha}\",\"branch\":\"${branch}\",\"repo\":\"${repo}\",\"runUrl\":\"${run_url}\",\"runnerType\":\"${runner_label}\",\"nodeVersion\":\"${node_ver}\",\"npmVersion\":\"${npm_ver}\",\"toolVersion\":\"GitLab\"}"
+      -d "{\"tool\":\"GitLab CI/CD\",\"run\":1,\"buildTime\":${build_time},\"testTime\":${build_time},\"status\":\"Success\",\"commit\":\"${short_sha}\",\"branch\":\"${branch}\",\"repo\":\"${repo}\",\"runUrl\":\"${run_url}\",\"runnerType\":\"${runner_label}\",\"nodeVersion\":\"${node_ver}\",\"npmVersion\":\"${npm_ver}\",\"toolVersion\":\"GitLab\"}"
       "https://script.google.com/macros/s/AKfycby_efCAW5NnY-XWtykFy6Tj_E43Aor0odrxTzS5_EjW7T-nFv3ts8yDZOJEhtiOI8SC9g/exec"
