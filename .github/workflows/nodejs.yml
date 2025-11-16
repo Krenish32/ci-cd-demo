@@ -35,4 +35,4 @@ jobs:
 
           curl -s -X POST -H "Content-Type: application/json" \
             -d "{\"tool\":\"GitHub Actions\",\"run\":1,\"buildTime\":${build_time},\"testTime\":${build_time},\"status\":\"Success\",\"commit\":\"${short_sha}\",\"branch\":\"${branch}\",\"repo\":\"${repo}\",\"runUrl\":\"${run_url}\",\"runnerType\":\"GitHub-hosted Ubuntu\",\"nodeVersion\":\"${node_ver}\",\"npmVersion\":\"${npm_ver}\",\"toolVersion\":\"Actions\"}" \
-            "https://script.google.com/macros/s/AKfycby_efCAW5NnY-XWtykFy6Tj_E43Aor0odrxTzS5_EjW7T-nFv3ts8yDZOJEhtiOI8SC9g/exec"
+            "https://script.google.com/macros/s/AKfycbweOev6oeHc0UMrBV7S_2eH43X5YV8ZwC2rOUIFKotijESaO8YkyFGzbq7OvKoaruR8eQ/exec"
