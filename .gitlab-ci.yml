@@ -1,6 +1,7 @@
 stages:
   - build
   - test
+  - post
 
 build_job:
   stage: build
@@ -13,3 +14,12 @@ test_job:
   image: node:18
   script:
     - npm test
+  
+post_to_sheet:
+  stage: post
+  image: curlimages/curl:8.10.1
+  script:
+    - |
+      curl -X POST -H "Content-Type: application/json" \
+        -d '{"tool":"GitLab CI/CD","run":1,"buildTime":90,"testTime":32,"status":"Success"}' \
+        "WEB_APP_URL"
