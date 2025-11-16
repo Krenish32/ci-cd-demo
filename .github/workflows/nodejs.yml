@@ -18,7 +18,9 @@ jobs:
           node-version: 18
 
   
-      - name: Post rich row to Google Sheet
+            - name: Post rich row to Google Sheet (with CPU/RAM)
+        env:
+          NOTES: "GH run"   # <- change this note if you want
         run: |
           start=$(date +%s)
           npm install
@@ -26,6 +28,7 @@ jobs:
           end=$(date +%s)
           build_time=$((end - start))
 
+          # Metadata
           node_ver=$(node -v || echo "n/a")
           npm_ver=$(npm -v || echo "n/a")
           short_sha=$(echo "${GITHUB_SHA}" | cut -c1-8)
@@ -33,7 +36,10 @@ jobs:
           repo="${GITHUB_REPOSITORY}"
           run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
 
-          curl -s -X POST -H "Content-Type: application/json" \
-            -d "{\"tool\":\"GitHub Actions\",\"run\":1,\"buildTime\":${build_time},\"testTime\":${build_time},\"status\":\"Success\",\"commit\":\"${short_sha}\",\"branch\":\"${branch}\",\"repo\":\"${repo}\",\"runUrl\":\"${run_url}\",\"runnerType\":\"GitHub-hosted Ubuntu\",\"nodeVersion\":\"${node_ver}\",\"npmVersion\":\"${npm_ver}\",\"toolVersion\":\"Actions\"}" \
-            "https://script.google.com/macros/s/AKfycbxp9ZkRRzuCexKnoHiU-X1aB5Yj4nvloeG12O0DkmoAIp1-pc2jtEFvik5DEtiFyBKOhg/exec"
+          # CPU / RAM (portable)
+          cpu_used=$(nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo "unknown")
+          mem_used=$(awk '/MemTotal/ {printf "%.0f MB", $2/1024}' /proc/meminfo 2>/dev/null || echo "unknown")
 
+          curl -s -X POST -H "Content-Type: application/json" \
+            -d "{\"tool\":\"GitHub Actions\",\"run\":1,\"buildTime\":${build_time},\"testTime\":${build_time},\"status\":\"Success\",\"commit\":\"${short_sha}\",\"branch\":\"${branch}\",\"repo\":\"${repo}\",\"runUrl\":\"${run_url}\",\"runnerType\":\"GitHub-hosted Ubuntu\",\"nodeVersion\":\"${node_ver}\",\"npmVersion\":\"${npm_ver}\",\"toolVersion\":\"Actions\",\"cpuUsed\":\"${cpu_used}\",\"memoryUsed\":\"${mem_used}\",\"notes\":\"${NOTES}\"}" \
+            "https://script.google.com/macros/s/AKfycbxp9ZkRRzuCexKnoHiU-X1aB5Yj4nvloeG12O0DkmoAIp1-pc2jtEFvik5DEtiFyBKOhg/exec"
