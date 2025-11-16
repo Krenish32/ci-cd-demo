@@ -18,7 +18,7 @@ jobs:
           node-version: 18
 
   
-            - name: Post rich row to Google Sheet (with CPU/RAM)
+      - name: Post rich row to Google Sheet (with CPU/RAM)
         env:
           NOTES: "GH run"   # <- change this note if you want
         run: |
