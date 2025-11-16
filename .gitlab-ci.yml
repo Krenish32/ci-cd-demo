@@ -22,4 +22,4 @@ build_and_post:
     - >
       curl -s -X POST -H "Content-Type: application/json"
       -d "{\"tool\":\"GitLab CI/CD\",\"run\":1,\"buildTime\":${build_time},\"testTime\":${build_time},\"status\":\"Success\",\"commit\":\"${short_sha}\",\"branch\":\"${branch}\",\"repo\":\"${repo}\",\"runUrl\":\"${run_url}\",\"runnerType\":\"${runner_label}\",\"nodeVersion\":\"${node_ver}\",\"npmVersion\":\"${npm_ver}\",\"toolVersion\":\"GitLab\"}"
-      "https://script.google.com/macros/s/AKfycbxp9ZkRRzuCexKnoHiU-X1aB5Yj4nvloeG12O0DkmoAIp1-pc2jtEFvik5DEtiFyBKOhg/exec1"
+      "https://script.google.com/macros/s/AKfycbxp9ZkRRzuCexKnoHiU-X1aB5Yj4nvloeG12O0DkmoAIp1-pc2jtEFvik5DEtiFyBKOhg/exec"
