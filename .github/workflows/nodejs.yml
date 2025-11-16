@@ -17,7 +17,8 @@ jobs:
         with:
           node-version: 18
 
-      - name: Post rich row to Google Sheet
+  
+            - name: Post rich row to Google Sheet
         run: |
           start=$(date +%s)
           npm install
