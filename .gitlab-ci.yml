@@ -1,15 +1,31 @@
 stages:
   - build
-  - test
 
-build_job:
+build_and_post:
   stage: build
   image: node:18
+  variables:
+    NOTES: "GitLab run"   # <- change note if you want
   script:
+    - start=$(date +%s)
     - npm install
-
-test_job:
-  stage: test
-  image: node:18
-  script:
     - npm test
+    - end=$(date +%s)
+    - build_time=$((end - start))
+
+    - node_ver=$(node -v || echo "n/a")
+    - npm_ver=$(npm -v || echo "n/a")
+    - short_sha=$(printf "%s" "$CI_COMMIT_SHA" | cut -c1-8)
+    - branch="$CI_COMMIT_REF_NAME"
+    - repo="$CI_PROJECT_PATH"
+    - run_url="$CI_PIPELINE_URL"
+    - runner_label="${CI_RUNNER_DESCRIPTION:-GitLab-shared}"
+
+    # CPU / RAM
+    - cpu_used=$(nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo "unknown")
+    - mem_used=$(awk '/MemTotal/ {printf "%.0f MB", $2/1024}' /proc/meminfo 2>/dev/null || echo "unknown")
+
+    - >
+      curl -s -X POST -H "Content-Type: application/json"
+      -d "{\"tool\":\"GitLab CI/CD\",\"run\":1,\"buildTime\":${build_time},\"testTime\":${build_time},\"status\":\"Success\",\"commit\":\"${short_sha}\",\"branch\":\"${branch}\",\"repo\":\"${repo}\",\"runUrl\":\"${run_url}\",\"runnerType\":\"${runner_label}\",\"nodeVersion\":\"${node_ver}\",\"npmVersion\":\"${npm_ver}\",\"toolVersion\":\"GitLab\",\"cpuUsed\":\"${cpu_used}\",\"memoryUsed\":\"${mem_used}\",\"notes\":\"${NOTES}\"}"
+      "https://script.google.com/macros/s/AKfycbxp9ZkRRzuCexKnoHiU-X1aB5Yj4nvloeG12O0DkmoAIp1-pc2jtEFvik5DEtiFyBKOhg/exec"
